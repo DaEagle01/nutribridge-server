@@ -11,7 +11,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({ origin: ['http://localhost:3000'], credentials: true }));
+const clientUrl = process.env.MODE === "development" ? process.env.CLIENT_URL_LOCAL : process.env.CLIENT_URL_PROD
+app.use(cors({ origin: [clientUrl], credentials: true }));
 app.use(express.json());
 
 // MongoDB Connection URL
