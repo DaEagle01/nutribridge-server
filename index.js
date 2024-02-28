@@ -11,8 +11,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-const clientUrl = process.env.MODE === "development" ? process.env.CLIENT_URL_LOCAL : process.env.CLIENT_URL_PROD
-app.use(cors({ origin: [clientUrl], credentials: true }));
+app.use(cors({ origin: [process.env.MODE === "development" ? process.env.CLIENT_URL_LOCAL : process.env.CLIENT_URL_PROD], credentials: true }));
 app.use(express.json());
 
 // MongoDB Connection URL
@@ -29,6 +28,8 @@ async function run() {
         const supplyCollection = db.collection('supplies');
         const userCollection = db.collection('users');
         const gratitudeCollection = db.collection('gratitudes');
+        const testimonialCollection = db.collection('testimonials');
+        const volunteerCollection = db.collection('volunteers');
 
         // User Registration
         app.post('/api/v1/register', async (req, res) => {
@@ -125,6 +126,28 @@ async function run() {
         app.post("/api/v1/gratitudes", async (req, res) => {
             const gratitude = req.body;
             const result = await gratitudeCollection.insertOne(gratitude);
+            res.json(result);
+        });
+
+        app.get("/api/v1/testimonials", async (req, res) => {
+            const result = await testimonialCollection.find({}).toArray();
+            res.json(result);
+        });
+
+        app.post("/api/v1/testimonials", async (req, res) => {
+            const testimonial = req.body;
+            const result = await testimonialCollection.insertOne(testimonial);
+            res.json(result);
+        });
+
+        app.get("/api/v1/volunteers", async (req, res) => {
+            const result = await volunteerCollection.find({}).toArray();
+            res.json(result);
+        });
+
+        app.post("/api/v1/volunteers", async (req, res) => {
+            const volunteer = req.body;
+            const result = await volunteerCollection.insertOne(volunteer);
             res.json(result);
         });
 
