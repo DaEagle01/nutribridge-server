@@ -27,6 +27,7 @@ async function run() {
         const db = client.db('nutribridge');
         const supplyCollection = db.collection('supplies');
         const userCollection = db.collection('users');
+        const gratitudeCollection = db.collection('gratitudes');
 
         // User Registration
         app.post('/api/v1/register', async (req, res) => {
@@ -112,6 +113,17 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await supplyCollection.deleteOne(query);
+            res.json(result);
+        });
+
+        app.get("/api/v1/gratitudes", async (req, res) => {
+            const result = await gratitudeCollection.find({}).toArray();
+            res.json(result);
+        });
+
+        app.post("/api/v1/gratitudes", async (req, res) => {
+            const gratitude = req.body;
+            const result = await gratitudeCollection.insertOne(gratitude);
             res.json(result);
         });
 
